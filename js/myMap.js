@@ -1,9 +1,7 @@
 Array.prototype.myMap = function(callback) {
-	var i = 0;
 	var res = [];
-	var len = this.length;
 	if (typeof callback === 'function') {
-		for (; i < len; i++) {
+		for (var i = 0; i < this.length; i++) {
 			res[i] = callback(this[i], i, this);
 		}
 	}
