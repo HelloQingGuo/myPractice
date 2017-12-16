@@ -1,0 +1,127 @@
+```
+git --version
+git config --global user.name "Qing Guo"
+git config --global user.email ""
+git config --list
+
+git help <verb>
+git <verb> --help
+
+// See who and when do the commit
+git log
+
+// Update branch info of the remote repo
+git remote prune origin
+
+// 4 areas
+working directory <=> staging area <=> local repo <=> remote repo
+
+// 5 status
+以上 4 个区，进入每一个区成功之后会产生一个状态，再加上最初始的一个状态，一共是 5 种状态。以下我们把这 5 种状态分别命名为：
+
+Origin - Modified - Staged - Committed - Pushed
+```
+
+### Viewing info about the remote repo
+```
+git remote -v
+git branch -a
+```
+
+### Init a repository from existing code
+```
+git init
+rm -rf .git (if no need to track this project, just remove git repo from folder)
+touch .gitignore   => input file names that you want to ignore
+```
+
+### Undo git add (remove files from staging area)
+```
+git add -A
+
+git reset fileName / folderName
+git reset (undo git add .)
+```
+
+### Cloning a remote repo
+```
+// git clone ../remote_repo.git .  this dot means clone everything
+git clone <url>
+```
+
+### Show me the changes
+```
+git diff // diff between working dir and staging area
+git diff --cached // diff between staging area and local repo
+git diff master origin/master  // diff between local repo and remote repo
+```
+
+### Revert the changes
+```
+git checkout . // revert "unadded" changes / revert changes in working dir
+or git reset --hard
+
+git reset    git checkout . // revert changes in the staging area
+or git reset --hard
+
+git reset --hard origin/master // revert changes in the local repo
+
+git reset --hard HEAD^   git push -f // revert changes in the remote repo
+```
+
+### Create new branch and switch to it immediately
+```
+git checkout -b issue53 
+
+This is shorthand for:
+
+1). create a branch for desired feature:
+git branch issue53
+
+2). check out the branch you want to work on: 
+git checkout issue53 
+```
+
+### Common workflow:
+```
+// modify some
+git status
+git add -A
+git commit -m "..."
+// push branch to remote
+// -u make local branch associated with remote branch
+// after that, we could just use git pull/push, git will know which branch we are pushing/pulling
+git push -u(--set-upstream) origin issue53
+
+// Merge branch
+git branch --merged // merge status so far
+git merge issue53 // merge issue53 to current branch
+git push origin master
+
+// Deleting branch
+git branch -d calc-divide // delete branch locally
+git push origin --delete calc-divide // delete branch remotely
+```
+
+### Stash
+```
+// Stash your local changes
+git stash
+
+// See which stashes you’ve stored
+git stash list
+
+// Drop the top stash history
+git stash drop (name)
+
+// Update the branch to the latest code
+git pull
+
+// Merge your local changes into the latest code 
+git stash apply (name) / pop
+
+PS:
+git stash pop only takes a newest stashed change, drops it from the “stash stack”, and applies it to your current working tree. git stash apply takes a stashed change and applies it to your current working tree but not drops it from the "stash stack").
+```
+
+

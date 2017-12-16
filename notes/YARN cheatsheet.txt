@@ -1,0 +1,44 @@
+yarn.lock is important, should be checked into codebase
+   to guarantee the same dependencies across environment
+
+
+yarn add xxx
+yarn add xxx --dev
+yarn global add xxx
+
+yarn remove xxx
+yarn global remove xxx
+
+
+yarn upgrade:  to upgrade/dowmgrade
+
+	yarn upgrade xxx : most recent version
+	yarn upgrade xxx@3.0.0 : specific version
+
+yarn outdated
+    list all the dependencies' version
+
+yarn install
+    install all the required dependencies
+
+
+cache (speed up installation)
+	yarn cache clean
+	all the dependencies are cached locally
+	offline mode, no need to download again if you have it already
+
+"scripts": {
+	"start": "node server.js",
+	"test": ""
+}
+
+yarn run
+    list all the commands you can run
+
+	yarn run start
+	
+	yarn run test
+
+
+
+

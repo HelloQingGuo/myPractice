@@ -1,0 +1,43 @@
+/******************************Install and Uninstall*******************************/
+
+
+npm install // installs all modules that are listed on package.json file and their dependencies.
+
+npm update // updates all packages in node_modules directory and dependencies to latest version
+
+npm (un)install --save <package name> // package will be (un)installed dependencies
+
+npm (un)install --save-dev <package name> // package will be (un)installed devDependencies
+
+
+/******************************Find and Update*******************************/
+
+
+npm outdated // identify packages that should be updated.
+
+npm update <package name>
+// update your package to the latest version or wanted (next stable) version regarding what you wrote in the package.json if there is.
+
+
+/******************************Package Info*******************************/
+
+
+npm list // returns versions of all modules and dependencies.
+
+npm list --depth=0 // returns versions of all installed modules without dependencies.
+
+npm list <package name> // returns versions of single package
+
+npm view(info) <package name> version // returns the latest available version on the package.
+
+
+/****************************** Screen *******************************/
+
+ctrl+a  then d => detach from the screen
+
+screen: create a new screen
+screen -S name: create a new screen with a name
+screen -r : resume the screen if only one, or list the process if more than 1
+screen -r id: resume specific screen
+screen -ls: list the process if there are more than 1
+screen -X -S [session # you want to kill] quit : kill the session of screen
