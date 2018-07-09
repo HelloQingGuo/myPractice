@@ -1,0 +1,79 @@
+docker images
+docker pull <imagename:tag>
+docker rmi <imagename>
+
+docker container run -it (give you a terminal inside the running container): start new container interactively
+	—-name <container name>
+        -p (—-publish) <HOST:CONTAINER>
+        -d running in detached mode
+docker container run -it --rm -p 8443:8443 -e APP_PORT=8443 fan-api:local
+
+docker container container exec -it: run additional command in existing container
+
+docker image prune -f
+
+docker ps -a: list all the containers
+
+
+docker build -t fan-support:latest .
+docker run -it --rm -p 80:80 fan-support:latest
+
+
+make build-local
+docker run -it --rm -p 8080:8080 fan-api:local
+
+# GUI
+chmod build.sh +x
+./build.sh
+
+docker run -it --rm -p 8001:80 fan-gui:latest
+
+**********************************************************************************************
+docker container ls
+docker container ls -a
+
+docker top <container name>: list running process in specific container
+
+docker container stop <container id / name, no need to type all>: Stop one or more running containers
+
+docker container logs <container name>
+
+docker container rm <container id>: remove the unrunning container(s)
+docker container rm -f <container id>: Force-remove a running container
+
+docker container port <container>: check port of container
+
+
+
+*****************************************************************************************
+docker image build -t nameOfImage .  # . means using the DOCKERFILE in the current directory
+docker container run -p 80:80 --rm nameOfImage
+
+*********************************** Dockerfile ******************************************
+FROM: all images must have a FROM, usually from a minimal Linux distribution like alpine
+		if you truly want to start with an empty container, use FROM scratch
+ENV : optional, env variable that is used in later lines
+RUN : optional commands to run at shell inside container at build time  
+EXPOSE: expose these ports on the docker virtual network
+CMD : required, run this command when container is launched,
+  	  only one CMD allowed, so if there are multiple, last one wins
+WORKDIR: changing working directory, it is preferred to using 'RUN cd /some/path'
+
+
+
+***********************************Docker hub***************************************************
+docker login
+
+# create a tag targetImage that refers to sourceImage
+# targetImage: guoqing1001/nameOfImage, guoqing1001 is the docker hub account
+docker tag souceImage[:tag] targetImage[:tag]
+docker push  
+
+
+
+*************************************Docker compose*********************************************
+docker-compose up
+docker-compose down
+
+docker-compose up -d —-scale api=0
+docker-compose up -d —-scale api=1
