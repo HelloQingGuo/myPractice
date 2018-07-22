@@ -13,8 +13,11 @@ function all(promises) {
 					}
 				}, error => reject(error));
 			} else {
-				amountPendingPromise--;
 				responses[idx] = p;
+				amountPendingPromise--;
+				if (amountPendingPromise === 0) {
+					resolve(responses);
+				}
 			}
 		});
 	});
