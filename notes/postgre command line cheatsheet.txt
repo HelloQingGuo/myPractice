@@ -1,0 +1,12 @@
+psql <db name> -U <db role>
+\list list all the databases
+\du list all the database roles
+\dt: list the tables in the currently connected database
+\connect: connect to a specific database
+\q quit
+
+postgres=> CREATE DATABASE <db name>;
+postgres=> GRANT ALL PRIVILEGES ON DATABASE <db name> TO <db role>;
+
+createdb <db name> -U <db role>  
+

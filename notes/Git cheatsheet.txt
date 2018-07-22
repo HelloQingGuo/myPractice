@@ -20,6 +20,12 @@ working directory <=> staging area <=> local repo <=> remote repo
 以上 4 个区，进入每一个区成功之后会产生一个状态，再加上最初始的一个状态，一共是 5 种状态。以下我们把这 5 种状态分别命名为：
 
 Origin - Modified - Staged - Committed - Pushed
+
+HEAD is a reference to the last commit in the currently checked-out branch.
+git reset HEAD --hard: revert to the previous commit
+
+HEAD~1  one commit ahead of the last commit
+
 ```
 
 ### Viewing info about the remote repo
@@ -66,7 +72,7 @@ or git reset --hard
 
 git reset --hard origin/master // revert changes in the local repo
 
-git reset --hard HEAD^   git push -f // revert changes in the remote repo
+git reset --hard HEAD^   git push -f // HEAD^ == HEAD~1 revert changes in the remote repo
 ```
 
 ### Create new branch and switch to it immediately

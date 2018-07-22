@@ -1,0 +1,266 @@
+ng new APP-NAME
+ng g class ClassName
+ng g component/c my-component --module=app.module
+ng g service/s services/my-services --module=app.module
+ng g d shared-directives/my-directive
+ng g p myPipe
+ng g module/m Customer // generate a customized module
+ng serve
+
+
+************* Angular Event Binding *******
+
+(focus)="myMethod()"  // An element has received focus
+(blur)="myMethod()"   // An element has lost focus
+
+(submit)="myMethod()"  // A submit button has been pressed
+
+(scroll)="myMethod()"
+
+(cut)="myMethod()"
+(copy)="myMethod()"
+(paste)="myMethod()"
+
+(keydown)="myMethod()"
+(keypress)="myMethod()"
+(keyup)="myMethod()"
+
+(mouseenter)="myMethod()"
+(mousedown)="myMethod()"
+(mouseup)="myMethod()"
+
+(click)="myMethod()"
+(dblclick)="myMethod()"
+
+(drag)="myMethod()"
+(dragover)="myMethod()"
+(drop)="myMethod()"
+
+*************** Angular Modules **********
+
+0. NgModule
+
+	Metadata:
+		declarations — The components, directives, and pipes that belong to this NgModule.
+
+		exports — The subset of declarations that should be visible and usable in the component templates of other NgModules.
+
+		imports — Other modules whose exported classes are needed by component templates declared in this NgModule.
+
+		providers — Creators of services that this NgModule contributes to the global collection of services; they become accessible in all parts of the app. (You can also specify providers at the component level, which is often preferred.)
+
+		bootstrap — The main application view, called the root component, which hosts all other app views. Only the root NgModule should set this bootstrap property.
+
+1. BrowserModule
+
+2. CommomModule
+
+***************Directives***************
+	attribute
+	 	defaultColor="yellow" or [defaultColor]="'yellow'"
+
+	structural
+		*ngFor="let num of numbers; let i = index"
+		*ngIf="isNumber"
+		[ngStyle]="{background: 'red'}"
+		[ngClass]="{active: isActive}"
+
+
+Use the Renderer for any DOM manipulations.
+https://angular.io/api/core/Renderer2
+
+@HostListener('mouseenter') mouseover(eventData: Event) {
+	this.render.setStyle(this.eleRef.nativeElement, 'background', 'red', false, false);
+}
+
+@HostBinding
+
+***************EventEmitter***************
+import {EventEmitter, Output } from '@angular/core';
+
+// passing our own event out of the component
+@Output('sCreated') serverCreated = new EventEmitter<{server: string, serverContent: string}>();
+
+onAddServer() {
+	// emit the event when this handler is revoked by a the other click event
+	this.serverCreated.emit({
+		server: 'new server',
+		serverContent: 'content of new server'
+	});
+}
+
+***************Services***************
+
+1. how to use service
+	import { Component, OnInit } from '@angular/core';
+	import { UserService } from '../user.service';
+
+	@Component({
+	  selector: 'app-inactive-users',
+	  templateUrl: './inactive-users.component.html',
+	  styleUrls: ['./inactive-users.component.css'],
+	  provides: [UserService]
+	})
+	export class InactiveUsersComponent implements OnInit {
+	  users: string[];
+
+	  constructor(private userService: UserService) {}
+
+	  ngOnInit() {
+	    this.users = this.userService.inactiveUsers;
+	  }
+
+	  onSetToActive(id: number) {
+	    this.userService.setToActive(id);
+	  }
+	}
+
+2. use service in another service
+	import { Injectable } from '@angular/core';
+	import { CounterService } from './counter.service';
+
+	@Injectable()
+	export class UserService {
+
+	  constructor(private counterService: CouterService) {}
+
+	}
+
+3. Using services for cross-component communication
+
+import { EventEmitter } from '@angular/core';
+
+user.service.ts:    definition	statusChanged = new EventEmitter<string>();
+
+foo.component.ts:   trigger
+	this.userService.statusChanged.emit("this is status: " + status);
+
+bar.component.ts:   subscribe in another component
+	constructor(private userService: UserService) {
+		this.userService.statusChanged.subscribe((status: string) => alert(status));
+	}
+
+
+***************Pipes***************
+@NgModule({
+	declarations: [
+		ShortenPipe
+	],
+	...
+})
+
+	import { PipeTransform } from '@angular/core';
+
+	@Pipe({
+		name: 'shorten'
+	})
+	export class MyPipe implements PipeTransform {
+		tranform(value: any, limit: number) {
+			if (value.length > limit) {
+				return value.substr(0, limit) + '...';
+			}
+			return value;
+		}
+	}
+
+
+	{{myString | shorten:12}}
+	{{promise | async}}
+
+***************HTTP Request***************
+TODO
+
+***************Unit Testing***************
+
+With using async(...) you tell the test framework to wait until the return promise or observable is completed before treating the test as completed.
+
+
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+describe('PickJurisdictionComponent', () => {
+	let component: PickJurisdictionComponent;
+	let fixture: ComponentFixture<PickJurisdictionComponent>;
+
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ PickJurisdictionComponent ]
+		})
+		.compileComponents(); // compile template and css
+	}));
+
+	beforeEach(() => {
+		fixture = TestBed.createComponent(PickJurisdictionComponent);
+		component = fixture.componentInstance; // the instance of the root component class
+		fixture.detectChanges(); // trigger component change detection
+	});
+
+	it('...', async(() => {
+		let dataService = fixture.debugElement.injector.get(DataService); // get the service from the injector
+		let spy = spyOn(DataService, 'getDetails').and.returnValue(Promise.resolve('Data')); // spy on the service async call and return a value of our own when it is being called
+		fixture.whenStable().then(() => {
+			expect(component.data).toBe('Data');
+		});
+	}));
+
+	it('#getValue should return stubbed value from a spy', () => {
+	    // create `getValue` spy on an object representing the ValueService
+	    const valueServiceSpy =
+	      jasmine.createSpyObj('ValueService', ['getValue']);
+
+	    // set the value to return when the `getValue` spy is called.
+	    const stubValue = 'stub value';
+	    valueServiceSpy.getValue.and.returnValue(stubValue);
+
+	    masterService = new MasterService(valueServiceSpy);
+
+	    expect(masterService.getValue())
+	      .toBe(stubValue, 'service returned stub value');
+	    expect(valueServiceSpy.getValue.calls.count())
+	      .toBe(1, 'spy method was called once');
+	    expect(valueServiceSpy.getValue.calls.mostRecent().returnValue)
+	      .toBe(stubValue);
+  	});
+});
+
+
+Injecting the real service rarely works well as most dependent services are difficult to create and control.
+Instead you can mock the dependency, use a dummy value, or create a spy on the pertinent service method.
+
+
+***************Comaparison****************
+Angular:
+	1. Modularity
+	dependency injection
+	2. Everything all in one package (animations, core, forms, etc)
+	3. backwards compatibility
+    4. Typescript: write better code
+
+ 	- strict, standard and one style way
+
+	1. More to learn (Directives, Decorator, EventEmitter, etc)
+	2. Typescript is compulsory
+     
+React:
+	1. jsx: logically neat
+    2. Easy to pick up, once you know how to pass props
+
+	1. jsx： not clean enough because cannot use normal HTML, mix js with html and css
+
+Vue:
+	1. separate HTML/CSS and JS
+	2. similar to React
+	3. light
+	4. official VUX, router
+	5. good doc
+
+
+
+	**************************************				
+
+	{{(config | async)?.heroesUrl}}
+
+
+  {{ diagonostic }}
+  get diagnostic() {
+    return JSON.stringify(this.model);
+  }
